@@ -6,6 +6,7 @@ from ...llm.models import get_default_model
 from ...logmanager import Log
 from ...message import Message, len_tokens
 from ...providers.context import CompressionConfig, get_context_provider
+from .config import _get_keep_head
 from .decision import should_auto_compact
 from .resume import _resume_via_llm
 
@@ -46,7 +47,7 @@ def _compact_auto(ctx, msgs: list[Message]) -> Generator[Message, None, None]:
 
     # Apply auto-compacting using the provider interface
     provider = get_context_provider("default")
-    config = CompressionConfig(logdir=ctx.manager.logdir)
+    config = CompressionConfig(logdir=ctx.manager.logdir, keep_head=_get_keep_head())
     compacted_msgs = list(provider.compress(msgs, config))
 
     # Calculate reduction stats
